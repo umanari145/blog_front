@@ -10,7 +10,7 @@ env:
 
 jobs:
   deploy:
-    images: node:18.12-alpine
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,7 +23,9 @@ jobs:
           aws-region: us-west-1
 
       - name: install
-        run: npm install
+        with:
+          node-version: '18.12'
+      - run: npm install
       - name: build
         run: npm run build
       - name:  deploy
