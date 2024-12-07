@@ -10,7 +10,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    images: node:18.12-alpine
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
