@@ -4,10 +4,7 @@ on:
       branches:
         - main
 env:
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-  AWS_ROLE_NAME: ${{ secrets.AWS_ROLE_NAME }}
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-  AWS_REGION: us-west-1
   REACT_APP_API_ENDPOINT: ${{ secrets.API_ENDPOINT }}
   REACT_APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
 
@@ -31,5 +28,5 @@ jobs:
         run: npm run build
       - name:  deploy
         run: |
-          aws s3 cp --recursive build s3://${{ env.S3_BUCKET_NAME }}/
+          aws s3 cp --recursive build s3://${{ secrets.S3_BUCKET_NAME }}/
 
