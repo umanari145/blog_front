@@ -1,10 +1,7 @@
 version: "3"
 services:
   node:
-    container_name: blog_node
-    build:
-      context: "./docker/node"
-      dockerfile: "Dockerfile"
+    container_name: blog_front_node
     image: node:18.12-alpine
     ports:
       - 3000:3000
@@ -14,10 +11,3 @@ services:
     # mongoも入れるので共有を./直下にする
     volumes:
       - .:/app
-    networks:
-      - blog_node
-    depends_on:
-      - mongo
-networks:
-  blog_node:
-    driver: "bridge"

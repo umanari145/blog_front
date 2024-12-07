@@ -1,46 +1,57 @@
-# Getting Started with Create React App
+# blog_front
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# [blog](https://github.com/umanari145/blog)のfrontを切り出し
+## ディレクトリ構成
+- .github/workflows・・S3へのアップロード
+### front
 
-## Available Scripts
+- build・・buildコマンド時に成果物が吐き出される場所
+- public・・buildの元
+- src・・実際のreactのソースが入っている
+    - class・・型
+    - layout・・htmlのパーツ
+    - pages・・routeから飛んできた時のページ
+    - parts・・Paginationなどのhtmlのパーツ
+    - App.tsx・・エントリーポイント
+- .env・・ローカル用の環境変数(実環境はCICDで環境変数を入れるので)
 
-In the project directory, you can run:
+プロジェクトスタート
+```
+docker exec -it blog_front_node sh
+pwd /app
+# プロジェクトの作成
+npx create-react-app front --template typescript
+frontディレクトリ以下にプロジェクト作られる
+cd front
+npm start ここでホットリロードができる
 
-### `npm start`
+http://localhost:3000/ でアクセスできる
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+ビルド&成果物のデプロイ
+```
+cd /app/front
+npm run build
+# dockerの外
+aws s3 sync build s3://skill-up-engineering
+```
+https://qiita.com/orange5302/items/2e005974d055b3c454d9
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 環境変数登録(GithubActions)
+```
+gh auth login
+#ブラウザアクセスして認証取る
+✓ Authentication complete.
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+✓ Logged in as umanari145
+! You were already logged in to this account
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+source  ../blog/infra/aws_configure.txt
+gh secret set AWS_ACCOUNT_ID --body "$AWS_ACCOUNT_ID" --repo umanari145/blog_front
+gh secret set AWS_ACCESS_KEY_ID --body "$AWS_ACCESS_KEY_ID" --repo umanari145/blog_front
+gh secret set AWS_SECRET_ACCESS_KEY --body "$AWS_SECRET_ACCESS_KEY" --repo umanari145/blog_front
+gh secret set API_ENDPOINT --body "$API_ENDPOINT" --repo umanari145/blog_front
+gh secret set APP_DOMAIN --body "$APP_DOMAIN" --repo umanari145/blog_front
+gh secret set S3_BUCKET_NAME --body "$S3_BUCKET_NAME" --repo umanari145/blog_front
+```
