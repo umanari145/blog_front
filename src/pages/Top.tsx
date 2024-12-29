@@ -20,10 +20,26 @@ export const Top = () => {
   }, []);
 
   const getPosts = async (page_no?:number) => {
-    let page_no_query = page_no ? `?page_no=${page_no}` : ""
+    let page_no_query = page_no ? `page_no=${page_no}` : ""
+    let category_query = category ? `category=${category}` : ""
+    let tag_query = tag ? `tag=${tag}` : ""
+    let year_query = year ? `year=${year}` : ""
+    let month_query = month ? `month=${month}` : ""
+
+    let queries = []
+    if (page_no_query) queries.push(page_no_query)
+    if (category_query) queries.push(category_query)
+    if (tag_query) queries.push(tag_query)
+    if (year_query) queries.push(year_query)
+    if (month_query) queries.push(month_query)
+
+    let query = "";
+    if (queries.length > 0) {
+      query = "?" + queries.join('&')
+    }
 
     try {
-      const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/blogs${page_no_query}`)
+      const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/blogs${query}`)
       if (status === 200) {
         let res_items = JSON.parse(data.body)
 				// dateの値を変換

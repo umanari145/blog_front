@@ -13,13 +13,17 @@ export const Pagination : FC<Props> = ({ totalPages, currentPage, onPageChange }
   let lastPageNumber:number;
 
   lastPageNumber = (currentPage + 10 < totalPages) ? currentPage + 10 : totalPages + 1;
-  
-  console.log(currentPage)
 
-  if (currentPage + 10 < totalPages) {
-    pages = _.range(currentPage, lastPageNumber);
+  if (lastPageNumber === 1) {
+    pages = [1]
+  } else if (lastPageNumber < 10) {
+    pages = _.range(1, lastPageNumber);
   } else {
-    pages = _.range(lastPageNumber - 10, lastPageNumber);
+    if (currentPage + 10 < totalPages) {
+      pages = _.range(currentPage, lastPageNumber);
+    } else {
+      pages = _.range(lastPageNumber - 10, lastPageNumber);
+    }
   }
 
   return (

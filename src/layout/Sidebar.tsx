@@ -28,12 +28,16 @@ export const Sidebar = () => {
     }
   };
 
+  const getSearch = async() => {
+
+  }
+
   return (
     <aside className="sidebar">
 
       <div className="search-box">
         <input type="text" placeholder="検索ワードを入力" />
-        <button type="button">検索</button>
+        <button type="button" onClick={getSearch}>検索</button>
       </div>
 
       <section className="widget">
