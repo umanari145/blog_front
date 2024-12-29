@@ -2,11 +2,18 @@ import { Footer } from "../layout/Footer";
 import { Header } from "../layout/Header";
 import { Sidebar } from "../layout/Sidebar";
 import axios from 'axios'
+import styled from 'styled-components';
 import { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom'
 import { Post } from "../class/Post";
-import { Pagination } from "../parts/Pagination";
 import moment from "moment";
+import { Loading } from "../layout/Loading";
+import { Pagination } from "../parts/Pagination";
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 export const Top = () => {
 
@@ -14,10 +21,11 @@ export const Top = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [total_pages, setTotalPage] = useState<number>();
   const [current_page, setCurrentPage] = useState<number>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     getPosts();
-  }, []);
+  },[]); // 空の空白がないとgetPostsが永久ループするので注意
 
   const getPosts = async (page_no?:number) => {
     let page_no_query = page_no ? `page_no=${page_no}` : ""
@@ -38,6 +46,7 @@ export const Top = () => {
       query = "?" + queries.join('&')
     }
 
+    setLoading(true)
     try {
       const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/blogs${query}`)
       if (status === 200) {
@@ -61,6 +70,7 @@ export const Top = () => {
     } catch (error) {
       console.error('Error fetching data: ', error);
     }
+    setLoading(false);
   };
 
 	const handlePageChange = async(page:number) => {
@@ -69,29 +79,31 @@ export const Top = () => {
 
   return (
     <>
-      <Header></Header>
-      <div className="container">
-				<section className="posts">
-					{posts.map((post:Post) => (
-					<article className="post">
-						<h2 className="post-title">
-							<a href={`${process.env.REACT_APP_DOMAIN}/${moment(post.post_date).format('YYYY/MM/DD')}/${post.post_no}`}>{post.title}</a>
-						</h2>
-						<p className="post-date">{moment(post.post_date).format('YYYY/MM/DD')}</p>
-						<p className="post-excerpt" dangerouslySetInnerHTML={{ __html: post?.contents}}>
-						</p>
-					</article>	 
-					))}
-					<Pagination
-        		totalPages={total_pages!}
-        		currentPage={current_page!}
-        		onPageChange={handlePageChange}
-      		/>
-				</section>
-
-        <Sidebar></Sidebar>
-      </div>
-      <Footer></Footer>
+      <Wrapper>
+        {loading && <Loading />}
+        <Header></Header>
+        <div className="container">
+          <section className="posts">
+            {posts.map((post:Post) => (
+            <article className="post">
+              <h2 className="post-title">
+                <a href={`${process.env.REACT_APP_DOMAIN}/${moment(post.post_date).format('YYYY/MM/DD')}/${post.post_no}`}>{post.title}</a>
+              </h2>
+              <p className="post-date">{moment(post.post_date).format('YYYY/MM/DD')}</p>
+              <p className="post-excerpt" dangerouslySetInnerHTML={{ __html: post?.contents}}>
+              </p>
+            </article>
+            ))}
+          <Pagination
+            totalPages={total_pages!}
+            currentPage={current_page!}
+            onPageChange={handlePageChange}
+          />
+          </section>
+          <Sidebar></Sidebar>
+        </div>
+        <Footer></Footer>
+      </Wrapper>
     </>
   );
 };
