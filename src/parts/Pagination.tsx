@@ -12,12 +12,25 @@ export const Pagination : FC<Props> = ({ totalPages, currentPage, onPageChange }
   let pages:number[] = [];
   let lastPageNumber:number;
 
-  lastPageNumber = (currentPage + 10 < totalPages) ? currentPage + 10 : totalPages;
+  lastPageNumber = (currentPage + 10 < totalPages) ? currentPage + 10 : totalPages + 1;
+  
+  console.log(currentPage)
 
-  pages = _.range(currentPage, lastPageNumber);
+  if (currentPage + 10 < totalPages) {
+    pages = _.range(currentPage, lastPageNumber);
+  } else {
+    pages = _.range(lastPageNumber - 10, lastPageNumber);
+  }
 
   return (
     <div style={styles.paginationContainer}>
+      <button
+        onClick={() => onPageChange(1)}
+        disabled={currentPage === 1}
+        style={styles.button}
+      >
+      最初へ
+      </button>
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -45,6 +58,13 @@ export const Pagination : FC<Props> = ({ totalPages, currentPage, onPageChange }
       >
       次へ
       </button>
+      <button
+        onClick={() => onPageChange(totalPages)}
+        disabled={currentPage === totalPages}
+        style={styles.button}
+      >
+      最後へ
+      </button>      
     </div>
   );
 };

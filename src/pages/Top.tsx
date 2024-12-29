@@ -3,12 +3,14 @@ import { Header } from "../layout/Header";
 import { Sidebar } from "../layout/Sidebar";
 import axios from 'axios'
 import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom'
 import { Post } from "../class/Post";
 import { Pagination } from "../parts/Pagination";
 import moment from "moment";
 
 export const Top = () => {
 
+  const {category, tag, year, month} = useParams();
   const [posts, setPosts] = useState<Post[]>([]);
   const [total_pages, setTotalPage] = useState<number>();
   const [current_page, setCurrentPage] = useState<number>();
