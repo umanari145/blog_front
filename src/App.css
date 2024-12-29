@@ -117,29 +117,76 @@
   padding: 0;
 }
 
-.widget-list li {
-  margin: 10px 0;
-}
-
 .widget-list a {
   display: flex; /* アイコンを並べるためにフレックス */
   align-items: center;
   text-decoration: none;
   font-size: 1rem;
+}
+
+.search-box {
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.search-box input[type="text"] {
+  padding: 8px;
+  border: none;
+  outline: none;
+}
+.search-box button {
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+.search-box button:hover {
+  background-color: #0056b3;
+}
+
+
+.tag-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tag-list li {
+  padding: 0 5px;
+  list-style-type: none;
+}
+
+.tag-list li a{
+  text-decoration: none;
+}
+
+.effect a {
+  list-style-type: none;
   color: #333333;
-  padding: 10px;
   border-radius: 5px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.widget-list a:hover {
+.effect a:hover {
   background-color: #f0f4ff; /* ホバー時に背景色を変更 */
   color: #0070f3;
 }
 
-.widget-list a::before {
+.with-dot a::before {
   content: "•"; /* アイコン代わりの丸 */
   font-size: 1.5rem;
   color: #0070f3;
   margin-right: 10px;
+}
+
+.tag-list{
+  list-style-type: none;
+}
+
+.tag-list li {
+  display: inline-block;
+  margin: 5px 0;
 }

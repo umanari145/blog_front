@@ -10,8 +10,8 @@ import moment from "moment";
 export const Top = () => {
 
   const [posts, setPosts] = useState<Post[]>([]);
-	const [total_pages, setTotalPage] = useState<number>();
-	const [current_page, setCurrentPage] = useState<number>();
+  const [total_pages, setTotalPage] = useState<number>();
+  const [current_page, setCurrentPage] = useState<number>();
 
   useEffect(() => {
     getPosts();
@@ -21,9 +21,9 @@ export const Top = () => {
     let page_no_query = page_no ? `?page_no=${page_no}` : ""
 
     try {
-       const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/blogs${page_no_query}`)
+      const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/blogs${page_no_query}`)
       if (status === 200) {
-		  	let res_items = JSON.parse(data.body)
+        let res_items = JSON.parse(data.body)
 				// dateの値を変換
 				const parseItems = (posts:Post[]):Post[] => {
 					return posts.map((post:Post) => {

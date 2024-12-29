@@ -1,10 +1,8 @@
 # blog_front
 
-# [blog](https://github.com/umanari145/blog)のfrontを切り出し
+ [blog](https://github.com/umanari145/blog)のfrontを切り出し
 ## ディレクトリ構成
 - .github/workflows・・S3へのアップロード
-### front
-
 - build・・buildコマンド時に成果物が吐き出される場所
 - public・・buildの元
 - src・・実際のreactのソースが入っている
@@ -21,8 +19,6 @@ docker exec -it blog_front_node sh
 pwd /app
 # プロジェクトの作成
 npx create-react-app front --template typescript
-frontディレクトリ以下にプロジェクト作られる
-cd front
 npm start ここでホットリロードができる
 
 http://localhost:3000/ でアクセスできる
@@ -48,7 +44,6 @@ gh auth login
 ! You were already logged in to this account
 
 source  ../blog/infra/aws_configure.txt
-gh secret set AWS_ACCOUNT_ID --body "$AWS_ACCOUNT_ID" --repo umanari145/blog_front
 gh secret set AWS_ACCESS_KEY_ID --body "$AWS_ACCESS_KEY_ID" --repo umanari145/blog_front
 gh secret set AWS_SECRET_ACCESS_KEY --body "$AWS_SECRET_ACCESS_KEY" --repo umanari145/blog_front
 gh secret set API_ENDPOINT --body "$API_ENDPOINT" --repo umanari145/blog_front
