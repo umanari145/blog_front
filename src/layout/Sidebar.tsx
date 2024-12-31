@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useEffect, useState } from "react";
 import _ from 'lodash';
 import { MenuItem } from "../class/MenuItem";
+import moment from "moment";
 
 export const Sidebar = () => {
 
@@ -16,12 +17,12 @@ export const Sidebar = () => {
   const getMenus = async () => {
     try {
       let categories, dates, tags;
-      const menus = window.localStorage.getItem('menus');
+      const menus = window.sessionStorage.getItem('menus');
       if (menus === null) {
         const {data, status} = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}/api/menus`)
         if (status === 200) {
           ({categories, dates, tags} = JSON.parse(data.body))   
-          window.localStorage.setItem('menus', data.body);
+          window.sessionStorage.setItem('menus', data.body);
         }
       } else {
         ({categories, dates, tags} = JSON.parse(menus))
