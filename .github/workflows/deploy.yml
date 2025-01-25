@@ -1,8 +1,8 @@
 name: Deploy React app to S3
 on:
   push:
-      branches:
-        - main
+    branches:
+      - main
 env:
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
   REACT_APP_API_ENDPOINT: ${{ secrets.API_ENDPOINT }}
@@ -39,7 +39,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
 
-      - name:  deploy
+      - name: deploy
         run: |
           aws s3 sync build s3://${{ secrets.S3_BUCKET_NAME }} --delete
-

@@ -3,7 +3,7 @@ export type Post = {
   title: string;
   // dangerouslySetInnerHTMLでTrustedHTMLに適用するためにanyにしておく
   contents: any;
-  post_no:string;
+  post_no: string;
   categories: string[];
   tags: string[];
   post_date: Date;
