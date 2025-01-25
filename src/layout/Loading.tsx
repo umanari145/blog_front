@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 const rotate = keyframes`
   from {
@@ -10,9 +10,9 @@ const rotate = keyframes`
 `;
 
 const LoadingDiv = styled.div`
-  position:absolute;
-  top:50%;
-  left:50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   border: 5px solid #f3f3f3; /* Light grey */
   border-top: 5px solid #3498db; /* Blue color */
   border-radius: 50%;
@@ -21,11 +21,10 @@ const LoadingDiv = styled.div`
   animation: ${rotate} 2s linear infinite;
 `;
 
-
 export const Loading = () => {
   return (
     <>
-    <LoadingDiv/>
+      <LoadingDiv />
     </>
   );
 };
