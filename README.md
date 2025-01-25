@@ -1,19 +1,22 @@
 # blog_front
 
- [blog](https://github.com/umanari145/blog)のfrontを切り出し
+[blog](https://github.com/umanari145/blog)のfrontを切り出し
+
 ## ディレクトリ構成
+
 - .github/workflows・・S3へのアップロード
 - build・・buildコマンド時に成果物が吐き出される場所
 - public・・buildの元
 - src・・実際のreactのソースが入っている
-    - class・・型
-    - layout・・htmlのパーツ
-    - pages・・routeから飛んできた時のページ
-    - parts・・Paginationなどのhtmlのパーツ
-    - App.tsx・・エントリーポイント
+  - class・・型
+  - layout・・htmlのパーツ
+  - pages・・routeから飛んできた時のページ
+  - parts・・Paginationなどのhtmlのパーツ
+  - App.tsx・・エントリーポイント
 - .env・・ローカル用の環境変数(実環境はCICDで環境変数を入れるので)
 
 プロジェクトスタート
+
 ```
 docker exec -it blog_front_node sh
 pwd /app
@@ -25,15 +28,18 @@ http://localhost:3000/ でアクセスできる
 ```
 
 ビルド&成果物のデプロイ
+
 ```
 cd /app/front
 npm run build
 # dockerの外
 aws s3 sync build s3://skill-up-engineering
 ```
+
 https://qiita.com/orange5302/items/2e005974d055b3c454d9
 
 ## 環境変数登録(GithubActions)
+
 ```
 gh auth login
 #ブラウザアクセスして認証取る
