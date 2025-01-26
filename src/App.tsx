@@ -11,6 +11,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path={`/`} Component={Top} />
+            <Route path={`/category/:category_query`} Component={Top} />
+            <Route path={`/tag/:tag_query`} Component={Top} />
+            <Route path={`/:year_query/:month_query`} Component={Top} />
             <Route path={`/:year/:month/:day/:post_key`} Component={Detail} />
           </Routes>
         </BrowserRouter>

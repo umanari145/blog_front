@@ -17,10 +17,10 @@ interface SearchContextType {
   setCategory: (category: string) => void;
   tag: string;
   setTag: (tag: string) => void;
-  year: number;
-  setYear: (year: number) => void;
-  month: number;
-  setMonth: (month: number) => void;
+  year: string;
+  setYear: (year: string) => void;
+  month: string;
+  setMonth: (month: string) => void;
   posts: Post[];
   setPosts: (posts: Post[]) => void;
   updatePosts: (params?: Params) => Promise<void>;
@@ -45,8 +45,8 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const [keyword, setKeyword] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [tag, setTag] = useState<string>('');
-  const [year, setYear] = useState<number>(0);
-  const [month, setMonth] = useState<number>(0);
+  const [year, setYear] = useState<string>('');
+  const [month, setMonth] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -87,8 +87,8 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     setKeyword('');
     setCategory('');
     setTag('');
-    setYear(0);
-    setMonth(0);
+    setYear('');
+    setMonth('');
     setPageNo(1);
   };
 

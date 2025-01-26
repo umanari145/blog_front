@@ -2,9 +2,10 @@ import { Params } from '../class/Params';
 import { useSearchContext } from '../context/SearchContext';
 
 const SearchBox = () => {
-  const { keyword, setKeyword, updatePosts} = useSearchContext();
+  const { keyword, setKeyword, updatePosts, clearQuery} = useSearchContext();
 
   const handleSearch = async () => {
+    clearQuery();
     await updatePosts(new Params({keyword: keyword}));
   };
 

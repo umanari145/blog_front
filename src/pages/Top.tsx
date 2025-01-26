@@ -9,12 +9,21 @@ import { Loading } from '../layout/Loading';
 import { Pagination } from '../parts/Pagination';
 import { useSearchContext } from '../context/SearchContext';
 import { Params } from '../class/Params';
+import { useParams } from 'react-router-dom';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `;
 
 export const Top = () => {
+
+  const {
+    category_query,
+    tag_query,
+    year_query,
+    month_query, 
+  } = useParams();
+  
   const { 
     posts,
     loading,
@@ -31,7 +40,18 @@ export const Top = () => {
     useSearchContext();
 
   useEffect(() => {
-    updatePosts();
+
+    if (category_query) setCategory(category_query);
+    if (tag_query) setTag(tag_query);
+    if (year_query) setYear(year_query);
+    if (month_query) setMonth(month_query);
+
+    updatePosts(new Params({
+      category: category_query,
+      tag: tag_query,
+      year: year_query,
+      month: month_query,
+    }));
   }, []);
 
   const handlePageChange = async (page_no: number) => {

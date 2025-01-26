@@ -2,8 +2,8 @@ export type ParamsProp = {
   keyword?: string;
   category?: string;
   tag?: string;
-  year?: number;
-  month?: number;
+  year?: string;
+  month?: string;
   page_no?: number;
 };
 
@@ -11,16 +11,16 @@ export class Params {
   keyword?: string;
   category?: string;
   tag?: string;
-  year?: number;
-  month?: number;
+  year?: string;
+  month?: string;
   page_no?: number;
 
   constructor(props: ParamsProp = {}) {
     this.keyword = props.keyword || '';
     this.category = props.category || '';
     this.tag = props.tag || '';
-    this.year = props.year || 0;
-    this.month = props.month || 0;
+    this.year = props.year || '';
+    this.month = props.month || '';
     this.page_no = props.page_no || 1;
   }
 

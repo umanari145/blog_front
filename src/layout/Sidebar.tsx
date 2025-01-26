@@ -3,44 +3,14 @@ import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { MenuItem } from '../class/MenuItem';
 import SearchBox from './SearchBox';
-import { useSearchContext } from '../context/SearchContext';
-import { Params } from '../class/Params';
 export const Sidebar = () => {
   const [categories, setCategories] = useState<MenuItem[]>([]);
   const [tags, setTags] = useState<MenuItem[]>([]);
   const [dates, setDates] = useState<MenuItem[]>([]);
-  const { setCategory, updatePosts, setTag, setYear, setMonth, clearQuery } =
-    useSearchContext();
 
   useEffect(() => {
     getMenus();
   }, []);
-
-  const handleCategoryClick = async (category: MenuItem) => {
-    clearQuery();
-    setCategory(category._id);
-    await updatePosts(new Params({category: category._id}));
-  };
-
-  const handleTagClick = async (tag: MenuItem) => {
-    clearQuery();
-    setTag(tag._id);
-    await updatePosts(new Params({tag: tag._id}));
-  };
-
-  const handleDateClick = async (date: MenuItem) => {
-    clearQuery();
-    const year = parseInt(date._id.split('-')[0]);
-    const month = parseInt(date._id.split('-')[1]);
-    setYear(year);
-    setMonth(month);
-    await updatePosts(
-      new Params({
-        year,
-        month
-      })
-    );
-  };
 
   const getMenus = async () => {
     try {
@@ -74,12 +44,9 @@ export const Sidebar = () => {
         <ul className="widget-list menu-list effect with-dot">
           {categories?.map((category: MenuItem) => (
             <li>
-              <button
-                onClick={() => handleCategoryClick(category)}
-                className="link-button"
-              >
+              <a href={`${process.env.REACT_APP_DOMAIN}/category/${category._id}`}>
                 {category._id}({category.count})
-              </button>
+              </a>
             </li>
           ))}
         </ul>
@@ -90,12 +57,7 @@ export const Sidebar = () => {
         <ul className="tag-list effect">
           {tags?.map((tag: MenuItem) => (
             <li>
-              <button
-                onClick={() => handleTagClick(tag)}
-                className="link-button"
-              >
-                {tag._id}
-              </button>
+              <a href={`${process.env.REACT_APP_DOMAIN}/tag/${tag._id}`}>{tag._id}</a>
             </li>
           ))}
         </ul>
@@ -106,12 +68,9 @@ export const Sidebar = () => {
         <ul className="widget-list effect with-dot">
           {dates?.map((date: MenuItem) => (
             <li>
-              <button
-                onClick={() => handleDateClick(date)}
-                className="link-button"
-              >
-                {date._id} ({date.count})
-              </button>
+              <a href={`${process.env.REACT_APP_DOMAIN}/${date._id.split('-')[0]}/${date._id.split('-')[1]}`}>
+              {date._id}  ({date.count})
+              </a>
             </li>
           ))}
         </ul>
