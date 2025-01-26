@@ -1,14 +1,11 @@
-import { useState } from 'react';
+import { Params } from '../class/Params';
 import { useSearchContext } from '../context/SearchContext';
 
 const SearchBox = () => {
-  const { setKeyword, updatePosts, clearQuery } = useSearchContext();
+  const { keyword, setKeyword, updatePosts} = useSearchContext();
 
-  const [keyword, setLocalKeyword] = useState('');
   const handleSearch = async () => {
-    clearQuery();
-    setKeyword(keyword);
-    updatePosts();
+    await updatePosts(new Params({keyword: keyword}));
   };
 
   return (
@@ -17,9 +14,12 @@ const SearchBox = () => {
         type="text"
         placeholder="検索ワードを入力"
         value={keyword}
-        onChange={(e) => setLocalKeyword(e.target.value)}
+        onChange={(e) => setKeyword(e.target.value)}
       />
-      <button type="button" onClick={handleSearch}>
+      <button 
+        type="button" 
+        onClick={handleSearch}
+      >
         検索
       </button>
     </div>

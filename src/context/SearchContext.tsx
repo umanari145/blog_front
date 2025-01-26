@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState} from 'react';
 import { Post } from '../class/Post';
 import axios from 'axios';
+import { Params } from '../class/Params';
 
 interface SearchProviderProps {
   children: React.ReactNode;
@@ -11,28 +12,27 @@ interface SearchContextType {
   page_no: number;
   setPageNo: React.Dispatch<React.SetStateAction<number>>;
   keyword: string;
-  setKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setKeyword: (keyword: string) => void;
   category: string;
-  setCategory: React.Dispatch<React.SetStateAction<string>>;
+  setCategory: (category: string) => void;
   tag: string;
-  setTag: React.Dispatch<React.SetStateAction<string>>;
+  setTag: (tag: string) => void;
   year: number;
-  setYear: React.Dispatch<React.SetStateAction<number>>;
+  setYear: (year: number) => void;
   month: number;
-  setMonth: React.Dispatch<React.SetStateAction<number>>;
+  setMonth: (month: number) => void;
   posts: Post[];
-  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
-  updatePosts: () => Promise<void>;
+  setPosts: (posts: Post[]) => void;
+  updatePosts: (params?: Params) => Promise<void>;
   totalPages: number;
-  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
+  setTotalPages: (totalPages: number) => void;
   currentPage: number;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentPage: (currentPage: number) => void;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   clearQuery: () => void;
 }
 
-// Contextの初期値
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 interface SearchProviderProps {
@@ -52,26 +52,8 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const updatePosts = async () => {
-    let page_no_query = page_no ? `page_no=${page_no}` : '';
-    let keyword_query = keyword ? `search_word=${keyword}` : '';
-    let category_query = category ? `category=${category}` : '';
-    let tag_query = tag ? `tag=${tag}` : '';
-    let year_query = year ? `year=${year}` : '';
-    let month_query = month ? `month=${month}` : '';
-
-    let queries = [];
-    if (page_no_query) queries.push(page_no_query);
-    if (keyword_query) queries.push(keyword_query);
-    if (category_query) queries.push(category_query);
-    if (tag_query) queries.push(tag_query);
-    if (year_query) queries.push(year_query);
-    if (month_query) queries.push(month_query);
-
-    let query_str = '';
-    if (queries.length > 0) {
-      query_str = '?' + queries.join('&');
-    }
+  const updatePosts = async (params?: Params) => {
+    let query_str = params?.getQueryString() || '';
     setLoading(true);
     try {
       const { data, status } = await axios.get(
@@ -90,7 +72,6 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
             };
           });
         };
-        console.log('furuhata');
         setPosts(parseItems(res_items.items));
         // たとえばページ読み込み順の関係からこの部分だたのtotal_page=data.total_pagesだと反映されない
         setTotalPages(parseInt(res_items.total_pages));
@@ -100,7 +81,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
       console.error('Error fetching data: ', error);
     }
     setLoading(false);
-  };
+  }
 
   const clearQuery = () => {
     setKeyword('');
@@ -108,7 +89,7 @@ export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
     setTag('');
     setYear(0);
     setMonth(0);
-    setPageNo(0);
+    setPageNo(1);
   };
 
   return (

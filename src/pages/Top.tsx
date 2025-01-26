@@ -8,24 +8,43 @@ import moment from 'moment';
 import { Loading } from '../layout/Loading';
 import { Pagination } from '../parts/Pagination';
 import { useSearchContext } from '../context/SearchContext';
-import { useParams } from 'react-router-dom';
-
+import { Params } from '../class/Params';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `;
 
 export const Top = () => {
-  const { posts, loading, updatePosts, totalPages, currentPage, setPageNo } =
+  const { 
+    posts,
+    loading,
+    updatePosts,
+    totalPages,
+    currentPage,
+    category,
+    tag,
+    year,
+    month,
+    keyword,
+    setPageNo
+  } =
     useSearchContext();
 
   useEffect(() => {
     updatePosts();
   }, []);
 
-  const handlePageChange = async (page: number) => {
-    setPageNo(page);
-    updatePosts();
+  const handlePageChange = async (page_no: number) => {
+    setPageNo(page_no);
+    const params = new Params({
+      page_no,
+      keyword,
+      category,
+      tag,
+      year,
+      month,
+    });
+    await updatePosts(params);
   };
 
   return (

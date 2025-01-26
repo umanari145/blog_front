@@ -4,13 +4,14 @@ import _ from 'lodash';
 import { MenuItem } from '../class/MenuItem';
 import SearchBox from './SearchBox';
 import { useSearchContext } from '../context/SearchContext';
-
+import { Params } from '../class/Params';
 export const Sidebar = () => {
   const [categories, setCategories] = useState<MenuItem[]>([]);
   const [tags, setTags] = useState<MenuItem[]>([]);
   const [dates, setDates] = useState<MenuItem[]>([]);
   const { setCategory, updatePosts, setTag, setYear, setMonth, clearQuery } =
     useSearchContext();
+
   useEffect(() => {
     getMenus();
   }, []);
@@ -18,20 +19,27 @@ export const Sidebar = () => {
   const handleCategoryClick = async (category: MenuItem) => {
     clearQuery();
     setCategory(category._id);
-    updatePosts();
+    await updatePosts(new Params({category: category._id}));
   };
 
   const handleTagClick = async (tag: MenuItem) => {
     clearQuery();
     setTag(tag._id);
-    updatePosts();
+    await updatePosts(new Params({tag: tag._id}));
   };
 
   const handleDateClick = async (date: MenuItem) => {
     clearQuery();
-    setYear(parseInt(date._id.split('-')[0]));
-    setMonth(parseInt(date._id.split('-')[1]));
-    updatePosts();
+    const year = parseInt(date._id.split('-')[0]);
+    const month = parseInt(date._id.split('-')[1]);
+    setYear(year);
+    setMonth(month);
+    await updatePosts(
+      new Params({
+        year,
+        month
+      })
+    );
   };
 
   const getMenus = async () => {
