@@ -9,20 +9,32 @@ import { Loading } from '../layout/Loading';
 import { Pagination } from '../parts/Pagination';
 import { useSearchContext } from '../context/SearchContext';
 import { Params } from '../class/Params';
-import { useParams } from 'react-router-dom';
+import { getQueryParam } from '../util/Convert';
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 `;
 
+const getAllQueryParams = () => ({
+  keyword: getQueryParam('keyword'),
+  category: getQueryParam('category'),
+  tag: getQueryParam('tag'),
+  year: getQueryParam('year'),
+  month: getQueryParam('month'),
+});
+
+const setContextFromQuery = (queryParams: ReturnType<typeof getAllQueryParams>, context: any) => {
+  const { setCategory, setTag, setYear, setMonth, setKeyword } = context;
+
+  if (queryParams.category) setCategory(queryParams.category);
+  if (queryParams.tag) setTag(queryParams.tag);
+  if (queryParams.year) setYear(queryParams.year);
+  if (queryParams.month) setMonth(queryParams.month);
+  if (queryParams.keyword) setKeyword(queryParams.keyword);
+};
+
 export const Top = () => {
   
-  const queryParams = new URLSearchParams(window.location.search);
-  const keyword_query = queryParams.get('keyword') || undefined;
-  const category_query = queryParams.get('category') || undefined;
-  const tag_query = queryParams.get('tag') || undefined;
-  const year_query = queryParams.get('year') || undefined;
-  const month_query = queryParams.get('month') || undefined;
 
   const { 
     posts,
@@ -45,33 +57,27 @@ export const Top = () => {
     useSearchContext();
 
   useEffect(() => {
-
-    if (category_query) setCategory(category_query);
-    if (tag_query) setTag(tag_query);
-    if (year_query) setYear(year_query);
-    if (month_query) setMonth(month_query);
-    if (keyword_query) setKeyword(keyword_query);
-
-    updatePosts(new Params({
-      category: category_query,
-      tag: tag_query,
-      year: year_query,
-      month: month_query,
-      keyword: keyword_query,
-    }));
+    const queryParams = getAllQueryParams();
+    setContextFromQuery(queryParams, { 
+      setCategory,
+      setTag,
+      setYear,
+      setMonth,
+      setKeyword,
+    });
+    updatePosts(new Params(queryParams))
   }, []);
 
   const handlePageChange = async (page_no: number) => {
     setPageNo(page_no);
-    const params = new Params({
+    await updatePosts(new Params({
       page_no,
-      keyword: keyword_query,
+      keyword,
       category,
       tag,
       year,
       month,
-    });
-    await updatePosts(params);
+    }));
   };
 
   return (

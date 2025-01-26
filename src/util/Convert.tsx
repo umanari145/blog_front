@@ -34,3 +34,5 @@ export const RenderHtmlWithBr: React.FC<RenderHtmlWithBrProps> = ({ text }) => {
   const formattedText = formatText(text);
   return <div dangerouslySetInnerHTML={{ __html: formattedText }} />;
 };
+
+export const getQueryParam = (param: string) => new URLSearchParams(window.location.search).get(param) || undefined;
