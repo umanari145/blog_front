@@ -1,12 +1,10 @@
-import { Params } from '../class/Params';
 import { useSearchContext } from '../context/SearchContext';
 
 const SearchBox = () => {
-  const { keyword, setKeyword, updatePosts, clearQuery} = useSearchContext();
+  const { keyword, setKeyword} = useSearchContext();
 
   const handleSearch = async () => {
-    clearQuery();
-    await updatePosts(new Params({keyword: keyword}));
+    window.location.href = `${process.env.REACT_APP_DOMAIN}/?keyword=${keyword}`;
   };
 
   return (

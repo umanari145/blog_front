@@ -44,7 +44,7 @@ export const Sidebar = () => {
         <ul className="widget-list menu-list effect with-dot">
           {categories?.map((category: MenuItem) => (
             <li>
-              <a href={`${process.env.REACT_APP_DOMAIN}/category/${category._id}`}>
+              <a href={`${process.env.REACT_APP_DOMAIN}/?category=${category._id}`}>
                 {category._id}({category.count})
               </a>
             </li>
@@ -57,7 +57,7 @@ export const Sidebar = () => {
         <ul className="tag-list effect">
           {tags?.map((tag: MenuItem) => (
             <li>
-              <a href={`${process.env.REACT_APP_DOMAIN}/tag/${tag._id}`}>{tag._id}</a>
+              <a href={`${process.env.REACT_APP_DOMAIN}/?tag=${tag._id}`}>{tag._id}</a>
             </li>
           ))}
         </ul>
@@ -68,7 +68,7 @@ export const Sidebar = () => {
         <ul className="widget-list effect with-dot">
           {dates?.map((date: MenuItem) => (
             <li>
-              <a href={`${process.env.REACT_APP_DOMAIN}/${date._id.split('-')[0]}/${date._id.split('-')[1]}`}>
+              <a href={`${process.env.REACT_APP_DOMAIN}/?year=${date._id.split('-')[0]}&month=${date._id.split('-')[1]}`}>
               {date._id}  ({date.count})
               </a>
             </li>

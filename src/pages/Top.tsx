@@ -16,14 +16,14 @@ const Wrapper = styled.div`
 `;
 
 export const Top = () => {
-
-  const {
-    category_query,
-    tag_query,
-    year_query,
-    month_query, 
-  } = useParams();
   
+  const queryParams = new URLSearchParams(window.location.search);
+  const keyword_query = queryParams.get('keyword') || undefined;
+  const category_query = queryParams.get('category') || undefined;
+  const tag_query = queryParams.get('tag') || undefined;
+  const year_query = queryParams.get('year') || undefined;
+  const month_query = queryParams.get('month') || undefined;
+
   const { 
     posts,
     loading,
@@ -35,7 +35,12 @@ export const Top = () => {
     year,
     month,
     keyword,
-    setPageNo
+    setPageNo,
+    setCategory,
+    setTag,
+    setYear,
+    setMonth,
+    setKeyword,
   } =
     useSearchContext();
 
@@ -45,12 +50,14 @@ export const Top = () => {
     if (tag_query) setTag(tag_query);
     if (year_query) setYear(year_query);
     if (month_query) setMonth(month_query);
+    if (keyword_query) setKeyword(keyword_query);
 
     updatePosts(new Params({
       category: category_query,
       tag: tag_query,
       year: year_query,
       month: month_query,
+      keyword: keyword_query,
     }));
   }, []);
 
@@ -58,7 +65,7 @@ export const Top = () => {
     setPageNo(page_no);
     const params = new Params({
       page_no,
-      keyword,
+      keyword: keyword_query,
       category,
       tag,
       year,
