@@ -5,7 +5,7 @@ interface LoginProps {
   onLogin: (email: string, password: string) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({onLogin}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
