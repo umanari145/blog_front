@@ -1,9 +1,6 @@
 import React from 'react';
-
-interface Option {
-  id: string;
-  name: string;
-}
+import styled from 'styled-components';
+import { Option } from '../class/Option';
 
 interface SelectProps {
   options: Option[];
@@ -11,16 +8,30 @@ interface SelectProps {
   onChange: (value: string) => void;
 }
 
+const SelectBox = styled.select`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+`;
+
 const Select: React.FC<SelectProps> = ({ options, value, onChange }) => {
   return (
-    <select value={value} onChange={(e) => onChange(e.target.value)}>
+    <SelectBox value={value} onChange={(e) => onChange(e.target.value)}>
       <option value="">選択してください</option>
       {options.map((option) => (
         <option key={option.id} value={option.id}>
           {option.name}
         </option>
       ))}
-    </select>
+    </SelectBox>
   );
 };
 
