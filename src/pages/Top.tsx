@@ -1,7 +1,6 @@
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
 import { Sidebar } from '../layout/Sidebar';
-import styled from 'styled-components';
 import { useEffect } from 'react';
 import { Post } from '../class/Post';
 import moment from 'moment';
@@ -10,10 +9,7 @@ import { Pagination } from '../parts/Pagination';
 import { useSearchContext } from '../context/SearchContext';
 import { Params } from '../class/Params';
 import { getQueryParam } from '../util/Convert';
-const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+import { Wrapper } from '../components';
 
 const getAllQueryParams = () => ({
   keyword: getQueryParam('keyword'),
@@ -92,6 +88,8 @@ export const Top = () => {
                 <h2 className="post-title">
                   <a
                     href={`${process.env.REACT_APP_DOMAIN}/${moment(post.post_date).format('YYYY/MM/DD')}/${post.post_no}`}
+                    target="_blank" 
+                    rel="noopener noreferrer"
                   >
                     {post.title}
                   </a>
