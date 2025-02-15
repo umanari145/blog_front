@@ -7,6 +7,8 @@ import { Button, Input, InputGroup, Label, Box, Wrapper, Container } from '../co
 import axios from 'axios';
 import _ from 'lodash';
 import { Option } from '../class/Option';
+import moment from 'moment';
+import { Loading } from '../layout/Loading';
 
 const CustomWrapper = styled(Wrapper)`
   background-color: #f0f4f8;
@@ -44,11 +46,12 @@ const TextArea = styled.textarea`
 
 const Create: React.FC = () => {
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
+  const [contents, setContents] = useState('');
+  const [post_no, setPostNo] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [date, setDate] = useState('');
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [categories, setCategories] = useState<Option[]>([]);
   const [tags, setTags] = useState<Option[]>([]);
 
@@ -71,33 +74,58 @@ const Create: React.FC = () => {
       } else {
         ({ categories, tags } = JSON.parse(menus));
       }
-      console.log(categories);
+      categories = []
+      tags = []
+      categories.push({id:"1", name:"未分類"})
+      categories.push({id:"2", name:"database"})
       setCategories(categories);
+      tags.push({id:"15", name:"ansible"})
+      tags.push({id:"16", name:"bootstrap"})
       setTags(tags);
     } catch (error) {
       console.error('Error fetching data: ', error);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !content || !category || !date) {
+    if (!title || !contents || !selectedCategory || !selectedTags || !date) {
       alert('全ての必須項目を入力してください。');
       return;
     }
-    console.log({
-      title,
-      content,
-      category,
-      selectedTags,
-      date,
-    });
-    alert('ブログが正常に登録されました。');
+
+    const postData = {
+      "title": title,
+      "contents": contents,
+      "categories": [selectedCategory],
+      "post_no": `post-${post_no}`,
+      "post_date": moment(date).format("YYYY-MM-DD"),
+      "tags": selectedTags
+    }
+
+    console.log(postData);
+    setLoading(true);
+    try {
+      const {status} = await axios.post(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/blogs`,
+        postData
+      );
+      if (status === 200) {
+        alert('ブログが正常に登録されました。');
+      } else {
+        alert('ブログの登録に失敗しました。');
+      }
+    } catch (error) {
+      alert('ブログの登録に失敗しました。');
+      console.error('Error fetching data: ', error);
+    }
+    setLoading(false);
   };
 
   return (
     <>
     <CustomWrapper>
+      {loading && <Loading />}
       <CustomContainer>
         <CustomBox>
           <CustomTitle>新規ブログ登録</CustomTitle>
@@ -112,10 +140,19 @@ const Create: React.FC = () => {
               />
             </InputGroup>
             <InputGroup>
+              <Label>post-no:</Label>
+              <Input
+                type="text"
+                value={post_no}
+                onChange={(e) => setPostNo(e.target.value)}
+                required
+              />
+            </InputGroup>
+            <InputGroup>
               <Label>本文:</Label>
               <TextArea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
+                value={contents}
+                onChange={(e) => setContents(e.target.value)}
                 required
               />
             </InputGroup>
@@ -123,8 +160,8 @@ const Create: React.FC = () => {
               <Label>カテゴリ:</Label>
               <Select
                 options={categories}
-                value={category}
-                onChange={setCategory}
+                value={selectedCategory}
+                onChange={setSelectedCategory}
               />
             </InputGroup>
             <InputGroup>
