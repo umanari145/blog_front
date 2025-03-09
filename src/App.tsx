@@ -7,8 +7,8 @@ import Login from './pages/Login';
 import { authenticateUser } from './util/auth';
 import { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './middleware/ProtectedRoute';
 import Create from './pages/Create';
+import Update from './pages/Update';
 
 function App() {
 
@@ -33,7 +33,8 @@ function App() {
               <Route path="/login" element={<Login onLogin={handleLogin} />} />
               <Route path="/:year/:month/:day/:post_key" element={<Detail />} />
               {/* <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>*/}
-              <Route path="/create" element={<Create />} />
+              <Route path="/post" element={<Create />} />
+              <Route path="/post/:post_key" element={<Update />} />
             </Routes>
           </BrowserRouter>
         </SearchProvider>
