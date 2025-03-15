@@ -9,6 +9,7 @@ import _ from 'lodash';
 import { Option } from '../class/Option';
 import moment from 'moment';
 import { Loading } from '../layout/Loading';
+import { useMenuContext } from '../context/MenuContext';
 
 const CustomWrapper = styled(Wrapper)`
   background-color: #f0f4f8;
@@ -45,6 +46,14 @@ const TextArea = styled.textarea`
 `;
 
 const Create: React.FC = () => {
+
+  const {
+    categoryOptions,
+    tagOptions,
+    getMenus
+  } =
+    useMenuContext();
+
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
   const [post_no, setPostNo] = useState('');
@@ -52,40 +61,11 @@ const Create: React.FC = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [date, setDate] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [categories, setCategories] = useState<Option[]>([]);
-  const [tags, setTags] = useState<Option[]>([]);
 
   useEffect(() => {
     getMenus();
   }, []);
 
-  const getMenus = async () => {
-    try {
-      let categories,  tags;
-      const menus = window.sessionStorage.getItem('menus');
-      if (menus === null) {
-        const { data, status } = await axios.get(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/menus`
-        );
-        if (status === 200) {
-          ({ categories, tags } = JSON.parse(data.body));
-          window.sessionStorage.setItem('menus', data.body);
-        }
-      } else {
-        ({ categories, tags } = JSON.parse(menus));
-      }
-      categories = []
-      tags = []
-      categories.push({id:"1", name:"未分類"})
-      categories.push({id:"2", name:"database"})
-      setCategories(categories);
-      tags.push({id:"15", name:"ansible"})
-      tags.push({id:"16", name:"bootstrap"})
-      setTags(tags);
-    } catch (error) {
-      console.error('Error fetching data: ', error);
-    }
-  };
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +83,6 @@ const Create: React.FC = () => {
       "tags": selectedTags
     }
 
-    console.log(postData);
     setLoading(true);
     try {
       const {status} = await axios.post(
@@ -159,7 +138,7 @@ const Create: React.FC = () => {
             <InputGroup>
               <Label>カテゴリ:</Label>
               <Select
-                options={categories}
+                options={categoryOptions}
                 value={selectedCategory}
                 onChange={setSelectedCategory}
               />
@@ -167,7 +146,7 @@ const Create: React.FC = () => {
             <InputGroup>
               <Label>タグ:</Label>
               <CheckboxGroup
-                options={tags}
+                options={tagOptions}
                 selectedValues={selectedTags}
                 onChange={setSelectedTags}
               />

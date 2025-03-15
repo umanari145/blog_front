@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
 import Create from './pages/Create';
 import Update from './pages/Update';
+import { MenuProvider } from './context/MenuContext';
 
 function App() {
 
@@ -26,18 +27,20 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
-        <SearchProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Top />} />
-              <Route path="/login" element={<Login onLogin={handleLogin} />} />
-              <Route path="/:year/:month/:day/:post_key" element={<Detail />} />
-              {/* <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>*/}
-              <Route path="/post" element={<Create />} />
-              <Route path="/post/:post_key" element={<Update />} />
-            </Routes>
-          </BrowserRouter>
-        </SearchProvider>
+        <MenuProvider>
+          <SearchProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Top />} />
+                <Route path="/login" element={<Login onLogin={handleLogin} />} />
+                <Route path="/:year/:month/:day/:post_key" element={<Detail />} />
+                {/* <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>*/}
+                <Route path="/post" element={<Create />} />
+                <Route path="/post/:post_key" element={<Update />} />
+              </Routes>
+            </BrowserRouter>
+          </SearchProvider>
+        </MenuProvider>
       </AuthProvider>
     </div>
   );

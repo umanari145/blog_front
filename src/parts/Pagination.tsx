@@ -26,7 +26,7 @@ export const Pagination: FC<Props> = ({
     if (currentPage + 10 < totalPages) {
       pages = _.range(currentPage, lastPageNumber);
     } else {
-      pages = _.range(lastPageNumber - 10, lastPageNumber);
+      pages = _.range(lastPageNumber - 9, lastPageNumber);
     }
   }
 

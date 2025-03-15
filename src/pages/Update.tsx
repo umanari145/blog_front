@@ -10,6 +10,7 @@ import { Option } from '../class/Option';
 import moment from 'moment';
 import { Loading } from '../layout/Loading';
 import { useParams } from 'react-router-dom';
+import { useMenuContext } from '../context/MenuContext';
 
 const CustomWrapper = styled(Wrapper)`
   background-color: #f0f4f8;
@@ -46,49 +47,26 @@ const TextArea = styled.textarea`
 `;
 
 const Update: React.FC = () => {
+
+  const {
+    categoryOptions,
+    tagOptions,
+    getMenus
+  } =
+    useMenuContext();
+
   const { post_key } = useParams();
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
-  const [post_no, setPostNo] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [date, setDate] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [categories, setCategories] = useState<Option[]>([]);
-  const [tags, setTags] = useState<Option[]>([]);
 
   useEffect(() => {
     getMenus();
     getPost(post_key);
   }, [post_key]);
 
-  const getMenus = async () => {
-    try {
-      let categories,  tags;
-      const menus = window.sessionStorage.getItem('menus');
-      if (menus === null) {
-        const { data, status } = await axios.get(
-          `${process.env.REACT_APP_API_ENDPOINT}/api/menus`
-        );
-        if (status === 200) {
-          ({ categories, tags } = JSON.parse(data.body));
-          window.sessionStorage.setItem('menus', data.body);
-        }
-      } else {
-        ({ categories, tags } = JSON.parse(menus));
-      }
-      categories = []
-      tags = []
-      categories.push({id:"1", name:"未分類"})
-      categories.push({id:"2", name:"database"})
-      setCategories(categories);
-      tags.push({id:"15", name:"ansible"})
-      tags.push({id:"16", name:"bootstrap"})
-      setTags(tags);
-    } catch (error) {
-      console.error('Error fetching data: ', error);
-    }
-  };
 
   const getPost = async (post_key?: string) => {
     setLoading(true);
@@ -102,9 +80,12 @@ const Update: React.FC = () => {
         }
         console.log(data.statusCode)
         let res_item = JSON.parse(data.body);
+        console.log(res_item)
         res_item.date = new Date(res_item.post_date);
         setTitle(res_item.title)
         setContents(res_item.contents)
+        setSelectedCategory(res_item.categories[0])
+        setSelectedTags(res_item.tags)
       }
     } catch (error) {
       console.error('Error fetching data: ', error);
@@ -173,7 +154,7 @@ const Update: React.FC = () => {
             <InputGroup>
               <Label>カテゴリ:</Label>
               <Select
-                options={categories}
+                options={categoryOptions}
                 value={selectedCategory}
                 onChange={setSelectedCategory}
               />
@@ -181,7 +162,7 @@ const Update: React.FC = () => {
             <InputGroup>
               <Label>タグ:</Label>
               <CheckboxGroup
-                options={tags}
+                options={tagOptions}
                 selectedValues={selectedTags}
                 onChange={setSelectedTags}
               />
