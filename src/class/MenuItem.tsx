@@ -1,4 +1,5 @@
 export type MenuItem = {
-  _id: string;
+  no: number | null;
+  name: string;
   count: number;
 };
