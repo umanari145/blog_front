@@ -7,9 +7,10 @@ import Login from './pages/Login';
 import { authenticateUser } from './util/auth';
 import { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
-import Create from './pages/Create';
-import Update from './pages/Update';
+import Create from './pages/Admin/Posts/Create';
+import Update from './pages/Admin/Posts/Update';
 import { MenuProvider } from './context/MenuContext';
+import Index from './pages/Admin/Posts/Index';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/:year/:month/:day/:post_key" element={<Detail />} />
                 {/* <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>*/}
+                <Route path="/posts" element={<Index />} />
                 <Route path="/post" element={<Create />} />
                 <Route path="/post/:post_key" element={<Update />} />
               </Routes>
