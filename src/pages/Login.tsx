@@ -3,20 +3,22 @@ import React, { useState } from 'react';
 import { Container, Box, Title, InputGroup, Label, Input, Button } from '../components';
 import styled from 'styled-components';
 import { useAuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginBox = styled(Box)`
   max-width: 500px;
 `;
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const { login } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const handleSubmit = () => {
     login(email, password);
+    navigate("/admin/"); 
   };
 
   return (

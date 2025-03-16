@@ -15,17 +15,21 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    const storedAuth = sessionStorage.getItem("isAuthenticated");
+    return storedAuth === "true";
+  });
   const loginApi: LoginApiInterface = createLogin();
 
   const login = async (email: string, password: string) => {
     try {
-      console.log("sagat")
       const data = await loginApi.fetchData(email, password)
       if (data.httpStatusCode === 200 && data.success === true) {
         setIsAuthenticated(true);
+        window.sessionStorage.setItem("isAuthenticated", "true");
       } else {
         setIsAuthenticated(false)
+        window.sessionStorage.setItem("isAuthenticated", "false");
       }
     } catch (error: any) {
         return { success: false, message: error.message || "サーバーエラーが発生しました。" };
@@ -34,6 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = (): void => {
     setIsAuthenticated(false);
+    window.sessionStorage.setItem('isAuthenticated', "false");
   };
 
   return (

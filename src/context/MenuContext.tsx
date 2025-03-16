@@ -20,10 +20,6 @@ interface MenuContextType {
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined);
 
-interface MenuProviderProps {
-  children: React.ReactNode;
-}
-
 // Context Providerのコンポーネント
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const [categories, setCategories] = useState<MenuItem[]>([]);
@@ -36,7 +32,7 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const getMenus = async () => {
     try {
       let categories, dates, tags;
-      const menus = window.sessionStorage.getItem('menus');
+      const menus = window.localStorage.getItem('menus');
       if (menus === null) {
         const { data, status } = await axios.get(
           `${process.env.REACT_APP_API_ENDPOINT}/api/menus`
@@ -44,7 +40,7 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
         //console.log(data)
         if (status === 200) {
           ({ categories, dates, tags } = JSON.parse(data.body));
-          window.sessionStorage.setItem('menus', data.body);
+          window.localStorage.setItem('menus', data.body);
         }
       } else {
         ({ categories, dates, tags } = JSON.parse(menus));

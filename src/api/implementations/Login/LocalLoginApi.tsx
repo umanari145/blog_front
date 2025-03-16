@@ -5,7 +5,7 @@ export class LocalLoginApi implements LoginApiInterface {
     if (email === "hoge@gmail.com" && password === "hoge") {
       return {
         success: true,
-        httpStatusCode: 201,
+        httpStatusCode: 200,
         message: "ログイン成功",
       };
     } else {
