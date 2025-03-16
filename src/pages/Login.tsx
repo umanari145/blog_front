@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import { Container, Box, Title, InputGroup, Label, Input, Button } from '../components';
 import styled from 'styled-components';
-
-interface LoginProps {
-  onLogin: (email: string, password: string) => void;
-}
+import { useAuthContext } from '../context/AuthContext';
 
 const LoginBox = styled(Box)`
   max-width: 500px;
 `;
 
-const Login: React.FC<LoginProps> = ({onLogin}) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const { login } = useAuthContext();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin(email, password);
+    login(email, password);
   };
 
   return (
