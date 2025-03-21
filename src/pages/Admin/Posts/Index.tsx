@@ -1,13 +1,13 @@
 // BlogForm.tsx
 import React, { useEffect } from 'react';
-import { CustomBox, CustomContainer, CustomTitle, CustomWrapper } from '../../../styled/Admin';
-import { Loading } from '../../../layout/Loading';
 import { useSearchContext } from '../../../context/SearchContext';
 import { getQueryParam } from '../../../util/Convert';
 import { Params } from '../../../class/Params';
 import { Post } from '../../../class/Post';
-import { Button } from '../../../components';
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import { Col, Container, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import '../../../css/admin/index.css'
 
 const getAllQueryParams = () => ({
   keyword: getQueryParam('keyword'),
@@ -32,7 +32,6 @@ const Index: React.FC = () => {
 
   const {
     posts,
-    loading,
     updatePosts,
     setCategory,
     setTag,
@@ -56,27 +55,40 @@ const Index: React.FC = () => {
     updatePosts(new Params(queryParams))
   }, []);
 
-  const handleButtonClick = () => {
+  const handleCreate = () => {
     navigate('/admin/post');
+  };
+
+  const handleEdit = (post_no: string) => {
+    navigate(`/admin/post/${post_no}`);
   };
 
   return (
     <>
-    <CustomWrapper>
-      <CustomContainer>
-        <Button onClick={handleButtonClick}>
-          ブログ新規登録
-        </Button>
-        <CustomBox>
-          <CustomTitle>ブログ一覧</CustomTitle>
-          {posts.map((post: Post, index:number) => (
-            <li>
-              {post.post_no} {post.title}
-            </li>
-          ))}
-        </CustomBox>
-      </CustomContainer>
-    </CustomWrapper>
+      <Container className="mt-5">
+        <div>
+          <div className="d-flex flex-end mb-3">
+            <Button variant="success" onClick={handleCreate}>新規登録</Button>
+          </div>
+
+          <Row>
+            <Col>
+              <ListGroup>
+              {posts.map((post:Post) => (
+                <ListGroupItem key={post.post_no} className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{post.title}</strong>
+                  </div>
+                  <div>
+                    <Button variant="primary" size="sm" onClick={() => handleEdit(post.post_no)}>編集</Button>
+                  </div>
+                </ListGroupItem>
+              ))}
+              </ListGroup>
+            </Col>
+          </Row>
+        </div>
+      </Container>
     </>
   );
 }
