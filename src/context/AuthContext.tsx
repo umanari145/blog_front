@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useContext } from "react";
+import React, { createContext, useState, ReactNode, useContext, useEffect } from "react";
 import { createLogin } from "../api/LoginFactory";
 import { LoginApiInterface } from "../api/interface/LoginApiInterface";
 
@@ -6,9 +6,14 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface LoginResult {
+  success: boolean;
+  message?: string; // 成功時は不要だが、失敗時にエラーメッセージを格納
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => Promise<LoginResult>;
   logout: () => void;
 }
 
@@ -21,15 +26,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
   const loginApi: LoginApiInterface = createLogin();
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string):Promise<LoginResult> => {
     try {
       const data = await loginApi.fetchData(email, password)
       if (data.httpStatusCode === 200 && data.success === true) {
         setIsAuthenticated(true);
         window.sessionStorage.setItem("isAuthenticated", "true");
+        return { success: true };
       } else {
         setIsAuthenticated(false)
         window.sessionStorage.setItem("isAuthenticated", "false");
+        return { success: false, message: "認証失敗" };
       }
     } catch (error: any) {
         return { success: false, message: error.message || "サーバーエラーが発生しました。" };

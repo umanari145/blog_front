@@ -1,5 +1,5 @@
 // Login.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Box, Title, InputGroup, Label, Input, Button } from '../components';
 import styled from 'styled-components';
 import { useAuthContext } from '../context/AuthContext';
@@ -9,16 +9,19 @@ const LoginBox = styled(Box)`
   max-width: 500px;
 `;
 
-const Login = () => {
+const Login: React.FC = () => {
   const { login } = useAuthContext();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleSubmit = () => {
-    login(email, password);
-    navigate("/admin/"); 
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault(); // デフォルトのリロードを防ぐ
+    const res = await login(email, password);
+    if (res.success) {
+      navigate("/admin/")
+    }
   };
 
   return (

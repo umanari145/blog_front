@@ -6,6 +6,8 @@ import { useSearchContext } from '../../../context/SearchContext';
 import { getQueryParam } from '../../../util/Convert';
 import { Params } from '../../../class/Params';
 import { Post } from '../../../class/Post';
+import { Button } from '../../../components';
+import { useNavigate } from 'react-router-dom';
 
 const getAllQueryParams = () => ({
   keyword: getQueryParam('keyword'),
@@ -32,14 +34,6 @@ const Index: React.FC = () => {
     posts,
     loading,
     updatePosts,
-    totalPages,
-    currentPage,
-    category,
-    tag,
-    year,
-    month,
-    keyword,
-    setPageNo,
     setCategory,
     setTag,
     setYear,
@@ -47,6 +41,8 @@ const Index: React.FC = () => {
     setKeyword,
   } =
     useSearchContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const queryParams = getAllQueryParams();
@@ -57,18 +53,20 @@ const Index: React.FC = () => {
       setMonth,
       setKeyword,
     });
-    console.log("aaaaa");
     updatePosts(new Params(queryParams))
-  }, []);    
+  }, []);
+
+  const handleButtonClick = () => {
+    navigate('/admin/post');
+  };
 
   return (
     <>
     <CustomWrapper>
-      {loading && <Loading />}
       <CustomContainer>
-        <a href="/admin/post">
+        <Button onClick={handleButtonClick}>
           ブログ新規登録
-        </a>
+        </Button>
         <CustomBox>
           <CustomTitle>ブログ一覧</CustomTitle>
           {posts.map((post: Post, index:number) => (
