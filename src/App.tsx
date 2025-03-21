@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import './App.css';
+import './css/App.css';
 import { SearchProvider } from './context/SearchContext';
 import { MenuProvider } from './context/MenuContext';
 import { AuthProvider } from './context/AuthContext';

@@ -1,7 +1,7 @@
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
 import { Sidebar } from '../layout/Sidebar';
-import '../Detail.css';
+import '../css/Detail.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
