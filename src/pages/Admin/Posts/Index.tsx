@@ -5,9 +5,7 @@ import { getQueryParam } from '../../../util/Convert';
 import { Params } from '../../../class/Params';
 import { Post } from '../../../class/Post';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import { Col, Container, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
-import '../../../css/admin/index.css'
+import { AppBar, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Toolbar, Typography } from '@mui/material';
 
 const getAllQueryParams = () => ({
   keyword: getQueryParam('keyword'),
@@ -65,30 +63,46 @@ const Index: React.FC = () => {
 
   return (
     <>
-      <Container className="mt-5">
-        <div>
-          <div className="d-flex flex-end mb-3">
-            <Button variant="success" onClick={handleCreate}>新規登録</Button>
-          </div>
+    <div style={{ padding: "20px" }}>
+      <Typography variant="h4" gutterBottom>
+        管理画面の一覧
+      </Typography>
 
-          <Row>
-            <Col>
-              <ListGroup>
-              {posts.map((post:Post) => (
-                <ListGroupItem key={post.post_no} className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <strong>{post.title}</strong>
-                  </div>
-                  <div>
-                    <Button variant="primary" size="sm" onClick={() => handleEdit(post.post_no)}>編集</Button>
-                  </div>
-                </ListGroupItem>
-              ))}
-              </ListGroup>
-            </Col>
-          </Row>
-        </div>
-      </Container>
+      <AppBar position="static">
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>管理画面</div>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{ marginRight: "10px" }}
+            onClick={handleCreate}
+          >
+            新規作成
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <TableContainer component={Paper} style={{marginTop: "10px"}}>
+        <Table>
+          <TableBody>
+            {posts.map((post:Post) => (
+              <TableRow key={post._id}>
+                <TableCell>{post.title}</TableCell>
+                <TableCell>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={()=>handleEdit(post.post_no)}
+                  >
+                    編集
+                  </Button>
+                </TableCell>  
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
     </>
   );
 }
