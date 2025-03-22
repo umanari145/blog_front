@@ -9,7 +9,7 @@ env:
   REACT_APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
   NODE_ENV: production
   # warningはとりあえず無視
-  CI: false
+  CI: true
 
 jobs:
   deploy:
