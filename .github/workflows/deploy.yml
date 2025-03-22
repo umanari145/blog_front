@@ -7,7 +7,6 @@ env:
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
   REACT_APP_API_ENDPOINT: ${{ secrets.API_ENDPOINT }}
   REACT_APP_DOMAIN: ${{ secrets.APP_DOMAIN }}
-  NODE_ENV: production
   # warningはとりあえず無視
   CI: false
 
