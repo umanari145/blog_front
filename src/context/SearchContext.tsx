@@ -35,10 +35,6 @@ interface SearchContextType {
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
-interface SearchProviderProps {
-  children: React.ReactNode;
-}
-
 // Context Providerのコンポーネント
 export const SearchProvider: React.FC<SearchProviderProps> = ({ children }) => {
   const [page_no, setPageNo] = useState<number>(1);

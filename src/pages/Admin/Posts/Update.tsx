@@ -1,51 +1,15 @@
 // BlogForm.tsx
 import React, { useEffect, useState } from 'react';
-import Select from '../util/Select';
-import CheckboxGroup from '../util/Checkbox';
-import styled from 'styled-components';
-import { Button, Input, InputGroup, Label, Box, Wrapper, Container } from '../components';
+import Select from '../../../util/Select';
+import { Button, Input, InputGroup, Label} from '../../../components';
 import axios from 'axios';
-import _ from 'lodash';
-import { Option } from '../class/Option';
-import moment from 'moment';
-import { Loading } from '../layout/Loading';
-import { useMenuContext } from '../context/MenuContext';
+import { useParams } from 'react-router-dom';
+import { useMenuContext } from '../../../context/MenuContext';
+import { Loading } from '../../../layout/Loading';
+import CheckboxGroup from '../../../util/Checkbox';
+import { CustomBox, CustomContainer, CustomTitle, CustomWrapper, TextArea } from '../../../styled/Admin';
 
-const CustomWrapper = styled(Wrapper)`
-  background-color: #f0f4f8;
-`;
-
-const CustomContainer = styled(Container)`
-  background-color: #f0f4f8;
-`;
-
-const CustomBox = styled(Box)`
-  padding: 30px;
-  background-color: #f0f4f8;
-`;
-
-const CustomTitle = styled.h2`
-  font-size: 26px;
-  color: #007bff;
-  margin-bottom: 20px;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 14px;
-  min-height: 500px;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-  }
-`;
-
-const Create: React.FC = () => {
+const Update: React.FC = () => {
 
   const {
     categoryOptions,
@@ -54,22 +18,47 @@ const Create: React.FC = () => {
   } =
     useMenuContext();
 
+  const { post_key } = useParams();
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
-  const [post_no, setPostNo] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [date, setDate] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getMenus();
-  }, []);
+    getPost(post_key);
+  }, [post_key]);
 
 
+  const getPost = async (post_key?: string) => {
+    setLoading(true);
+    try {
+      const { data, status } = await axios.get(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/blogs/${post_key}`
+      );
+      if (status === 200) {
+        if (data.statusCode === 404) {
+          alert('存在しないブログです。')
+        }
+        console.log(data.statusCode)
+        let res_item = JSON.parse(data.body);
+        console.log(res_item)
+        res_item.date = new Date(res_item.post_date);
+        setTitle(res_item.title)
+        setContents(res_item.contents)
+        setSelectedCategory(res_item.categories[0])
+        setSelectedTags(res_item.tags)
+      }
+    } catch (error) {
+      console.error('Error fetching data: ', error);
+    }
+    setLoading(false);
+  };
+  
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !contents || !selectedCategory || !selectedTags || !date) {
+    if (!title || !contents || !selectedCategory || !selectedTags) {
       alert('全ての必須項目を入力してください。');
       return;
     }
@@ -78,24 +67,23 @@ const Create: React.FC = () => {
       "title": title,
       "contents": contents,
       "categories": [selectedCategory],
-      "post_no": `post-${post_no}`,
-      "post_date": moment(date).format("YYYY-MM-DD"),
       "tags": selectedTags
     }
 
+    console.log(postData);
     setLoading(true);
     try {
-      const {status} = await axios.post(
-        `${process.env.REACT_APP_API_ENDPOINT}/api/blogs`,
+      const {status} = await axios.put(
+        `${process.env.REACT_APP_API_ENDPOINT}/api/blogs/${post_key}`,
         postData
       );
       if (status === 200) {
-        alert('ブログが正常に登録されました。');
+        alert('ブログが正常に更新されました。');
       } else {
         alert('ブログの登録に失敗しました。');
       }
     } catch (error) {
-      alert('ブログの登録に失敗しました。');
+      alert('ブログのに失敗しました。');
       console.error('Error fetching data: ', error);
     }
     setLoading(false);
@@ -107,7 +95,7 @@ const Create: React.FC = () => {
       {loading && <Loading />}
       <CustomContainer>
         <CustomBox>
-          <CustomTitle>新規ブログ登録</CustomTitle>
+          <CustomTitle>ブログ更新</CustomTitle>
           <form onSubmit={handleSubmit}>
             <InputGroup>
               <Label>タイトル:</Label>
@@ -115,15 +103,6 @@ const Create: React.FC = () => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label>post-no:</Label>
-              <Input
-                type="text"
-                value={post_no}
-                onChange={(e) => setPostNo(e.target.value)}
                 required
               />
             </InputGroup>
@@ -151,15 +130,6 @@ const Create: React.FC = () => {
                 onChange={setSelectedTags}
               />
             </InputGroup>
-            <InputGroup>
-              <Label>投稿日:</Label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-            </InputGroup>
             <Button type="submit">登録</Button>
           </form>
         </CustomBox>
@@ -169,4 +139,4 @@ const Create: React.FC = () => {
   );
 };
 
-export default Create;
+export default Update;
