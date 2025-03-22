@@ -27,7 +27,7 @@ jobs:
 
       # npmパッケージのインストール
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # ビルド
       - name: Build project
